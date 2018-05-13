@@ -1,7 +1,7 @@
 const express = require('express');
-const init = require('./initBdd');
+const init = require('./init');
 const AllDogs = require('./all-dogs');
-const CreateDog = require('./create-dog').f;
+const CreateDog = require('./create-dog');
 
 app = express();
 
