@@ -1,20 +1,22 @@
 module.exports = () =>{
-	let mysql = require('mysql');
-	let connection = mysql.createConnection({
+	const mysql = require('mysql');
+	const connection = mysql.createConnection({
 	  host : 'localhost',
 	  user : 'root',
 	  password : 'root',
 	  database : 'dogs_app'
 	});
 
-	const allDogs = () => {
-		connection.query('SELECT * FROM dogs', function(err, rows, fields) {
+	const allDogs = () => new Promise ((resolve, reject) => {
+		connection.query('SELECT * FROM dogs', (err, rows, fields) => {
 			return rows;
 		});
-	}
+	})
 
-	connection.connect(function(){
-		allDogs();
-		connection.end();
+	connection.connect(() => {
+		allDogs()
+		.then(() => {
+			connection.end();
+		});
 	})
 }

@@ -1,5 +1,5 @@
 module.exports = {
-	f : (req, res) =>{
+	f : (req, res) => {
 		console.log(req.query)
 		let mysql = require('mysql');
 		let connection = mysql.createConnection({
@@ -12,14 +12,23 @@ module.exports = {
 		let name = req.query.name;
 		let ownerId = req.query.ownerId;
 
-		connection.connect(function(){
+		const addDog = () => new Promise ((resolve, reject) => {
 			connection.query('INSERT INTO dogs (name, owner_id) VALUES (?, ?)', [name, ownerId], (err, result) => {
 				if (err) throw err;
-			}.then(connection.query('SELECT * FROM dogs', function(err, rows, fields) {
+				resolve;
+			})
+			// connection.end();
+		})
+
+		connection.connect(
+			()=>{
+				addDog()
+				.then(()=>{
+				connection.query('SELECT * FROM dogs', (err, rows, fields) => {
 					console.log(rows);
-				});
-			))
-			connection.end();
+					res.send(rows)
+				})
+			});
 		})
 	}
 }
